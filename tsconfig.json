@@ -11,6 +11,6 @@
     "isolatedModules": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "examples/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"],
+  "include": ["api/**/*.ts", "src/**/*.ts", "examples/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

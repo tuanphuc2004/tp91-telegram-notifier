@@ -17,12 +17,13 @@ Zero-dependency TypeScript module for sending formatted HTML notifications to a 
 - `src/index.ts` — Core helper exports:
   - `isTelegramConfigured(options?)` — checks `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
   - `escapeTelegramHtml(value)` — escapes `&`, `<`, `>` for Telegram `HTML` parse mode
-  - `formatOrderTelegramMessage(input)` / `formatProjectRequestTelegramMessage(input)`
+  - `formatOrderTelegramMessage(input)` / `formatProjectRequestTelegramMessage(input)` / `formatCustomTelegramMessage(input)`
   - `sendTelegramNotification(htmlText, options?)` — `POST` request with `4.5s` default timeout and non-throwing error return
   - `notifyTelegramNewOrder(input, options?)` / `notifyTelegramProjectRequest(input, options?)`
+- `api/notify.ts` & `api/health.ts` — Standalone Vercel Functions (`GET /api/health`, `POST /api/notify`) protected by `NOTIFY_API_KEY` (`x-api-key` or `Authorization: Bearer`) using `timingSafeEqual`.
 - `examples/nextjs-server-action.ts` — Ready-to-copy Next.js Server Action example.
 - `scripts/test-send.ts` — Manual CLI smoke test (`npm run test:send`).
-- `tests/telegram.test.ts` — Vitest unit tests with mocked `fetch`.
+- `tests/telegram.test.ts` & `tests/api.test.ts` — Vitest unit tests with mocked `fetch`.
 
 ## Required Environment Variables
 
@@ -30,6 +31,7 @@ Server-only (never expose with `NEXT_PUBLIC_`):
 
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
+- `NOTIFY_API_KEY` (required for `/api/notify` endpoint; endpoint fails closed with `503` if unset)
 - `TELEGRAM_BRAND_NAME` (optional header label, defaults to `TP91tool`)
 
 ## Implementation Rules

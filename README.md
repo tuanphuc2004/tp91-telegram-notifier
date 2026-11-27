@@ -26,7 +26,38 @@ TELEGRAM_BOT_TOKEN=123456789:ABCdefGHIjklMNOpqrsTUVwxyz
 TELEGRAM_CHAT_ID=123456789
 ```
 
-## Sử dụng nhanh trong Next.js
+## Sử dụng làm API Webhook riêng trên Vercel (0đ)
+
+Repo đã tích hợp sẵn **Vercel Functions** chuẩn Web Standard (`api/health.ts` & `api/notify.ts`) để bạn deploy thành một API dịch vụ dùng chung cho nhiều website khác nhau:
+
+1. Deploy repo lên **Vercel Hobby (0đ)**.
+2. Trong **Settings → Environment Variables**, thêm 3 biến:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_CHAT_ID`
+   - `NOTIFY_API_KEY` *(chuỗi bí mật tự đặt để chống spam API)*
+3. Gọi từ backend hoặc Next.js Server Action của bất kỳ website nào:
+
+```bash
+curl -X POST https://your-notifier.vercel.app/api/notify \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_NOTIFY_API_KEY" \
+  -d '{
+    "type": "order",
+    "orderId": "ORD-101",
+    "itemTitle": "TP91 Commerce Starter",
+    "amountVnd": 490000,
+    "customerName": "Nguyễn Văn A",
+    "contactChannel": "zalo",
+    "customerContact": "0912345678"
+  }'
+```
+
+Hỗ trợ 3 loại payload (`type`):
+- `order`: Báo đơn hàng (`orderId`, `itemTitle`, `amountVnd`, `customerName`, `contactChannel`, `customerContact`, `note`)
+- `project_request`: Báo yêu cầu làm web/báo giá (`requestId`, `servicePackageName`, `customerName`, `contactChannel`, `customerContact`, `budgetRange`, `timeline`, `description`)
+- `custom` *(mặc định)*: Tin nhắn tùy biến (`title`, `message`, `fields`)
+
+## Sử dụng nhanh trong Next.js (nhúng trực tiếp)
 
 Xem ví dụ đầy đủ tại [`examples/nextjs-server-action.ts`](./examples/nextjs-server-action.ts):
 

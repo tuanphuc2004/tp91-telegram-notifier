@@ -27,6 +27,13 @@ export interface TelegramProjectRequestPayload {
   referenceUrl?: string | null;
 }
 
+export interface TelegramCustomPayload {
+  brandName?: string;
+  title: string;
+  message: string;
+  fields?: Record<string, string | number | boolean | null | undefined>;
+}
+
 export interface TelegramSendOptions {
   botToken?: string;
   chatId?: string;
@@ -142,6 +149,35 @@ export function formatProjectRequestTelegramMessage(
   );
   lines.push(`• <b>Gửi lúc:</b> ${escapeTelegramHtml(formatVietnamTime(now))}`);
 
+  return lines.join("\n");
+}
+
+export function formatCustomTelegramMessage(
+  input: TelegramCustomPayload,
+  now: Date = new Date()
+): string {
+  const brand = resolveBrand(input.brandName);
+  const lines = [
+    `<b>🔔 ${escapeTelegramHtml(truncateText(input.title, 120))} — ${escapeTelegramHtml(brand)}</b>`,
+    ``,
+    escapeTelegramHtml(truncateText(input.message, 1500)),
+  ];
+
+  if (input.fields) {
+    const entries = Object.entries(input.fields).filter(
+      ([, v]) => v !== undefined && v !== null && String(v).trim().length > 0
+    );
+    if (entries.length > 0) {
+      lines.push(``);
+      for (const [key, val] of entries.slice(0, 15)) {
+        lines.push(
+          `• <b>${escapeTelegramHtml(truncateText(key, 60))}:</b> ${escapeTelegramHtml(truncateText(String(val), 300))}`
+        );
+      }
+    }
+  }
+
+  lines.push(`• <b>Thời gian:</b> ${escapeTelegramHtml(formatVietnamTime(now))}`);
   return lines.join("\n");
 }
 

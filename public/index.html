@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TP91 Telegram Notifier API</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+        margin: 0;
+        padding: 40px 16px;
+      }
+      .card {
+        max-width: 680px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 22px;
+      }
+      p {
+        color: #475569;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+      code, pre {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        background: #f1f5f9;
+        border-radius: 8px;
+      }
+      code {
+        padding: 2px 6px;
+        font-size: 13px;
+      }
+      pre {
+        padding: 14px;
+        overflow-x: auto;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .badge {
+        display: inline-block;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <span class="badge">0đ Webhook Service • Vercel Functions</span>
+      <h1>TP91 Telegram Notifier API</h1>
+      <p>
+        Dịch vụ gửi thông báo đơn hàng &amp; form liên hệ qua Telegram Bot API.
+        Kiểm tra trạng thái cấu hình tại <a href="/api/health"><code>GET /api/health</code></a>.
+      </p>
+      <pre>POST /api/notify
+Headers:
+  Content-Type: application/json
+  x-api-key: YOUR_NOTIFY_API_KEY
+
+Body:
+{
+  "type": "order",
+  "orderId": "ORD-101",
+  "itemTitle": "TP91 Commerce Starter",
+  "amountVnd": 490000,
+  "customerName": "Nguyễn Văn A",
+  "contactChannel": "zalo",
+  "customerContact": "0912345678"
+}</pre>
+    </main>
+  </body>
+</html>

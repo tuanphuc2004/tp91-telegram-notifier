@@ -48,11 +48,14 @@ Sau đó lấy **Chat ID** theo 1 trong 2 cách sau:
 
 1. Đăng nhập trang quản trị **Vercel** → chọn dự án website của bạn.
 2. Vào mục **Settings** → **Environment Variables**.
-3. Thêm lần lượt **2 biến** sau (tích chọn đủ Production / Preview / Development):
+3. Thêm lần lượt các biến sau (tích chọn đủ Production / Preview / Development):
    - **Key:** `TELEGRAM_BOT_TOKEN` → **Value:** *(dán Token ở Bước 1)*
    - **Key:** `TELEGRAM_CHAT_ID` → **Value:** *(dán ID số ở Bước 2)*
+   - **Key:** `NOTIFY_API_KEY` → **Value:** *(tự đặt 1 chuỗi mật khẩu dài ngẫu nhiên để bảo vệ link API `/api/notify` nếu bạn deploy repo này làm dịch vụ API riêng)*
    - *(Tùy chọn)* **Key:** `TELEGRAM_BRAND_NAME` → **Value:** Tên thương hiệu/shop hiển thị trên đầu tin nhắn.
 4. Bấm **Save**, sau đó sang tab **Deployments** → bấm dấu `...` ở bản deploy mới nhất → chọn **Redeploy** để hệ thống nhận cấu hình mới.
+
+> **Kiểm tra link API sau khi deploy:** Mở `https://ten-mien-cua-ban.vercel.app/api/health` trên trình duyệt. Nếu thấy `"telegramConfigured": true` và `"apiKeyConfigured": true` nghĩa là dịch vụ API đã sẵn sàng nhận lệnh `POST /api/notify`.
 
 > **Lưu ý bảo mật:** Tuyệt đối không đặt tiền tố `NEXT_PUBLIC_` cho 2 biến trên để tránh lộ Bot Token ra ngoài trình duyệt.
 
