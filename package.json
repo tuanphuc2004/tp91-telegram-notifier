@@ -1,0 +1,19 @@
+{
+    "name": "tp91-telegram-notifier",
+    "version": "1.0.0",
+    "private": false,
+    "type": "module",
+    "description": "Zero-cost Telegram Bot API notifier for website orders, contact forms, and project requests (Next.js Server Actions / Node.js).",
+    "main": "./src/index.ts",
+    "scripts": {
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit",
+        "test:send": "tsx scripts/test-send.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "tsx": "^4.19.2",
+        "typescript": "^5",
+        "vitest": "^3.2.4"
+    }
+}
