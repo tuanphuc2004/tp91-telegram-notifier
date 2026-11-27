@@ -1,3 +1,4 @@
+import { isMultiTenantKeysEnabled } from "../src/crypto-key.js";
 import { isTelegramConfigured } from "../src/index.js";
 
 function jsonResponse(body: unknown, status = 200): Response {
@@ -11,6 +12,7 @@ export async function GET(): Promise<Response> {
   return jsonResponse({
     ok: true,
     service: "tp91-telegram-notifier",
+    multiTenantKeysEnabled: isMultiTenantKeysEnabled(),
     telegramConfigured: isTelegramConfigured(),
     apiKeyConfigured: Boolean(process.env.NOTIFY_API_KEY?.trim()),
     timestamp: new Date().toISOString(),

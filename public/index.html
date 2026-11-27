@@ -3,82 +3,620 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TP91 Telegram Notifier API</title>
+    <title>TP91 Telegram Notifier API — Tạo Key báo đơn 0đ</title>
     <style>
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --ink: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --accent: #eff6ff;
+        --success-bg: #ecfdf5;
+        --success-ink: #047857;
+        --danger-bg: #fef2f2;
+        --danger-ink: #b91c1c;
+      }
+      * {
+        box-sizing: border-box;
+      }
       body {
-        font-family: system-ui, -apple-system, sans-serif;
-        background: #f8fafc;
-        color: #0f172a;
         margin: 0;
-        padding: 40px 16px;
-      }
-      .card {
-        max-width: 680px;
-        margin: 0 auto;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 28px;
-      }
-      h1 {
-        margin: 0 0 8px;
-        font-size: 22px;
-      }
-      p {
-        color: #475569;
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
         line-height: 1.6;
-        font-size: 14px;
       }
-      code, pre {
-        font-family: ui-monospace, SFMono-Regular, monospace;
-        background: #f1f5f9;
-        border-radius: 8px;
-      }
-      code {
-        padding: 2px 6px;
-        font-size: 13px;
-      }
-      pre {
-        padding: 14px;
-        overflow-x: auto;
-        font-size: 12px;
-        line-height: 1.5;
+      .container {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 32px 16px 64px;
       }
       .badge {
-        display: inline-block;
-        background: #eff6ff;
-        color: #1d4ed8;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent);
+        color: var(--primary);
+        border: 1px solid #bfdbfe;
         font-size: 12px;
         font-weight: 600;
-        padding: 4px 10px;
+        padding: 4px 12px;
         border-radius: 999px;
+      }
+      h1 {
+        margin: 12px 0 8px;
+        font-size: clamp(24px, 4vw, 34px);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        max-width: 720px;
+        color: var(--muted);
+        font-size: 15px;
+        margin: 0 0 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      @media (min-width: 880px) {
+        .grid {
+          grid-template-columns: 1.05fr 0.95fr;
+          align-items: start;
+        }
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+      }
+      .card h2 {
+        margin: 0 0 6px;
+        font-size: 18px;
+      }
+      .card-desc {
+        margin: 0 0 18px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .field {
+        margin-bottom: 14px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .hint {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      input[type="text"],
+      input[type="password"],
+      input[type="url"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: inherit;
+        background: #fff;
+        color: var(--ink);
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      }
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        margin: 14px 0 18px;
+        cursor: pointer;
+      }
+      .checkbox-row input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-primary {
+        width: 100%;
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .btn-outline {
+        background: #fff;
+        color: var(--ink);
+        border-color: var(--border);
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .btn-outline:hover {
+        background: #f1f5f9;
+      }
+      .alert {
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 13px;
+        margin-top: 16px;
+        display: none;
+      }
+      .alert.error {
+        display: block;
+        background: var(--danger-bg);
+        color: var(--danger-ink);
+        border: 1px solid #fecaca;
+      }
+      .alert.success {
+        display: block;
+        background: var(--success-bg);
+        color: var(--success-ink);
+        border: 1px solid #a7f3d0;
+      }
+      .key-box {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid #bfdbfe;
+        background: var(--accent);
+        display: none;
+      }
+      .key-box.visible {
+        display: block;
+      }
+      .key-value {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 12px;
+        word-break: break-all;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        margin: 8px 0 10px;
+        color: var(--ink);
+      }
+      .key-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .steps {
+        margin: 0 0 18px;
+        padding-left: 18px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .steps li {
+        margin-bottom: 6px;
+      }
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
         margin-bottom: 12px;
+      }
+      .tab {
+        border: 1px solid var(--border);
+        background: #f8fafc;
+        color: var(--muted);
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .tab.active {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+      .code-wrap {
+        position: relative;
+      }
+      pre {
+        margin: 0;
+        background: #0f172a;
+        color: #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .copy-code-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 7px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .copy-code-btn:hover {
+        background: rgba(255, 255, 255, 0.22);
+      }
+      .security-note {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        font-size: 12px;
+      }
+      footer {
+        margin-top: 28px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      footer a {
+        color: var(--primary);
+        text-decoration: none;
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <span class="badge">0đ Webhook Service • Vercel Functions</span>
+    <main class="container">
+      <span class="badge">0đ Webhook Service • AES-256-GCM Encrypted Key</span>
       <h1>TP91 Telegram Notifier API</h1>
-      <p>
-        Dịch vụ gửi thông báo đơn hàng &amp; form liên hệ qua Telegram Bot API.
-        Kiểm tra trạng thái cấu hình tại <a href="/api/health"><code>GET /api/health</code></a>.
+      <p class="subtitle">
+        Tạo API Key riêng trong 30 giây và gắn vào website của bạn để tự động báo đơn hàng, form liên hệ về
+        Telegram cá nhân hoặc nhóm — <strong>không cần tạo thêm database hay server riêng</strong>.
       </p>
-      <pre>POST /api/notify
-Headers:
-  Content-Type: application/json
-  x-api-key: YOUR_NOTIFY_API_KEY
 
-Body:
-{
-  "type": "order",
-  "orderId": "ORD-101",
-  "itemTitle": "TP91 Commerce Starter",
-  "amountVnd": 490000,
-  "customerName": "Nguyễn Văn A",
-  "contactChannel": "zalo",
-  "customerContact": "0912345678"
-}</pre>
+      <div class="grid">
+        <!-- Left: Create API Key -->
+        <section class="card">
+          <h2>1. Tạo API Key của riêng bạn</h2>
+          <p class="card-desc">
+            Token Bot của bạn được mã hóa bằng AES-256-GCM thành API Key. Server không lưu trữ token ra ổ đĩa hay database.
+          </p>
+
+          <ol class="steps">
+            <li>Mở Telegram, nhắn <strong>@BotFather</strong> → gõ <code>/newbot</code> để lấy <strong>Bot Token</strong>.</li>
+            <li>Mở chat với con bot vừa tạo và bấm nút <strong>Start</strong> ít nhất 1 lần.</li>
+            <li>Nhắn <strong>@userinfobot</strong> để lấy dãy số <strong>Chat ID</strong> của bạn.</li>
+          </ol>
+
+          <form id="key-form">
+            <div class="field">
+              <label for="botToken">Telegram Bot Token *</label>
+              <input
+                id="botToken"
+                type="password"
+                required
+                autocomplete="off"
+                placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
+              />
+            </div>
+
+            <div class="field">
+              <label for="chatId">Telegram Chat ID *</label>
+              <input
+                id="chatId"
+                type="text"
+                required
+                placeholder="7245779125 hoặc -1001234567890"
+              />
+            </div>
+
+            <div class="field">
+              <label for="brandName">Tên shop / website (tùy chọn)</label>
+              <input
+                id="brandName"
+                type="text"
+                maxlength="60"
+                placeholder="Ví dụ: Shop Minh Anh"
+              />
+            </div>
+
+            <div class="field">
+              <label for="allowedOrigin">Khóa theo Domain (tùy chọn — chỉ điền nếu gọi từ HTML tĩnh)</label>
+              <input
+                id="allowedOrigin"
+                type="url"
+                placeholder="https://shopcuaban.com"
+              />
+              <span class="hint">Để trống nếu bạn gọi từ Backend (Next.js, Node.js, PHP, n8n).</span>
+            </div>
+
+            <label class="checkbox-row">
+              <input id="sendTest" type="checkbox" checked />
+              <span>Gửi 1 tin nhắn thử nghiệm về Telegram để kiểm tra kết nối ngay</span>
+            </label>
+
+            <button id="submit-btn" class="btn btn-primary" type="submit">
+              Tạo API Key miễn phí
+            </button>
+          </form>
+
+          <div id="form-alert" class="alert"></div>
+
+          <div id="key-result" class="key-box">
+            <strong style="font-size: 13px;">API Key của bạn (hãy copy và lưu lại):</strong>
+            <div id="api-key-text" class="key-value"></div>
+            <div class="key-actions">
+              <button id="copy-key-btn" type="button" class="btn btn-outline">Copy API Key</button>
+              <button id="test-order-btn" type="button" class="btn btn-outline">Gửi thử đơn hàng mẫu</button>
+            </div>
+            <div id="test-order-status" style="font-size: 12px; margin-top: 8px; color: var(--muted);"></div>
+          </div>
+        </section>
+
+        <!-- Right: Code snippets -->
+        <section class="card">
+          <h2>2. Gắn vào dự án của bạn</h2>
+          <p class="card-desc">
+            Chỉ cần dán API Key vào biến môi trường và gọi endpoint
+            <code>POST <span id="origin-label"></span>/api/notify</code>.
+          </p>
+
+          <div class="tabs" role="tablist">
+            <button type="button" class="tab active" data-tab="nextjs">Next.js / Node.js</button>
+            <button type="button" class="tab" data-tab="php">PHP / WordPress</button>
+            <button type="button" class="tab" data-tab="curl">cURL / Webhook</button>
+            <button type="button" class="tab" data-tab="html">HTML Form (CORS)</button>
+          </div>
+
+          <div class="code-wrap">
+            <button id="copy-code-btn" type="button" class="copy-code-btn">Copy code</button>
+            <pre><code id="code-block"></code></pre>
+          </div>
+
+          <div class="security-note">
+            <strong>Lưu ý bảo mật:</strong> Khi dùng trên Next.js/Node.js/PHP, hãy lưu API Key ở phía server (<code>.env.local</code> hoặc Vercel Environment Variables, <strong>không</strong> dùng tiền tố <code>NEXT_PUBLIC_</code>). Nếu dùng cho HTML tĩnh không có backend, hãy điền ô <em>Khóa theo Domain</em> ở cột bên trái.
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <a href="/api/health">Kiểm tra trạng thái API (/api/health)</a>
+        &nbsp;•&nbsp;
+        <a href="https://github.com/tuanphuc2004/tp91-telegram-notifier" target="_blank" rel="noopener noreferrer">
+          Mã nguồn mở trên GitHub
+        </a>
+      </footer>
     </main>
+
+    <script>
+      const baseOrigin = window.location.origin;
+      document.getElementById("origin-label").textContent = baseOrigin;
+
+      let currentApiKey = "tp91_live_YOUR_API_KEY";
+      let currentTab = "nextjs";
+
+      function buildSnippet(tab, key) {
+        const endpoint = baseOrigin + "/api/notify";
+        if (tab === "nextjs") {
+          return `// Đặt trong Server Action hoặc API Route (.env: TP91_NOTIFY_KEY=${key})
+await fetch("${endpoint}", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-key": process.env.TP91_NOTIFY_KEY,
+  },
+  body: JSON.stringify({
+    type: "order",
+    orderId: "ORD-" + Date.now().toString().slice(-5),
+    itemTitle: "Sản phẩm mẫu",
+    amountVnd: 290000,
+    customerName: "Nguyễn Văn A",
+    contactChannel: "zalo",
+    customerContact: "0912345678",
+    note: "Giao giờ hành chính",
+  }),
+});`;
+        }
+        if (tab === "php") {
+          return `<?php
+$ch = curl_init("${endpoint}");
+curl_setopt_array($ch, [
+  CURLOPT_POST => true,
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json",
+    "x-api-key: ${key}",
+  ],
+  CURLOPT_POSTFIELDS => json_encode([
+    "type" => "order",
+    "orderId" => "ORD-101",
+    "itemTitle" => "Đơn hàng website",
+    "amountVnd" => 490000,
+    "customerName" => "Anh Minh",
+    "contactChannel" => "zalo",
+    "customerContact" => "0909123456",
+  ]),
+]);
+curl_exec($ch);
+curl_close($ch);`;
+        }
+        if (tab === "curl") {
+          return `curl -X POST "${endpoint}" \\
+  -H "Content-Type: application/json" \\
+  -H "x-api-key: ${key}" \\
+  -d '{
+    "type": "custom",
+    "title": "Có khách liên hệ mới",
+    "message": "Khách vừa gửi form tư vấn trên website",
+    "fields": {
+      "Ten": "Nguyễn Văn A",
+      "Zalo": "0912345678"
+    }
+  }'`;
+        }
+        return `<!-- Chỉ dùng cách này khi đã nhập Domain của bạn vào ô "Khóa theo Domain" -->
+<script>
+async function sendLead(name, phone) {
+  await fetch("${endpoint}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "${key}",
+    },
+    body: JSON.stringify({
+      type: "custom",
+      title: "Lead mới từ Landing Page",
+      message: "Khách để lại thông tin liên hệ",
+      fields: { "Họ tên": name, "SĐT / Zalo": phone },
+    }),
+  });
+}
+<\/script>`;
+      }
+
+      function renderCode() {
+        document.getElementById("code-block").textContent = buildSnippet(currentTab, currentApiKey);
+      }
+
+      document.querySelectorAll(".tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+          btn.classList.add("active");
+          currentTab = btn.dataset.tab;
+          renderCode();
+        });
+      });
+
+      document.getElementById("copy-code-btn").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(buildSnippet(currentTab, currentApiKey));
+        const btn = document.getElementById("copy-code-btn");
+        btn.textContent = "Đã copy!";
+        setTimeout(() => (btn.textContent = "Copy code"), 1500);
+      });
+
+      document.getElementById("copy-key-btn").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(currentApiKey);
+        const btn = document.getElementById("copy-key-btn");
+        btn.textContent = "Đã copy API Key!";
+        setTimeout(() => (btn.textContent = "Copy API Key"), 1500);
+      });
+
+      document.getElementById("key-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const alertEl = document.getElementById("form-alert");
+        const keyBox = document.getElementById("key-result");
+        const btn = document.getElementById("submit-btn");
+
+        alertEl.className = "alert";
+        alertEl.textContent = "";
+        btn.disabled = true;
+        btn.textContent = "Đang tạo & kiểm tra Bot...";
+
+        try {
+          const res = await fetch("/api/keys", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              botToken: document.getElementById("botToken").value,
+              chatId: document.getElementById("chatId").value,
+              brandName: document.getElementById("brandName").value,
+              allowedOrigin: document.getElementById("allowedOrigin").value,
+              sendTestMessage: document.getElementById("sendTest").checked,
+            }),
+          });
+          const data = await res.json();
+
+          if (!res.ok || !data.ok) {
+            alertEl.className = "alert error";
+            alertEl.textContent = data.error || "Không thể tạo API Key.";
+            keyBox.classList.remove("visible");
+            return;
+          }
+
+          currentApiKey = data.apiKey;
+          document.getElementById("api-key-text").textContent = currentApiKey;
+          document.getElementById("test-order-status").textContent = "";
+          keyBox.classList.add("visible");
+          alertEl.className = "alert success";
+          alertEl.textContent = data.tested
+            ? "Tạo API Key thành công và đã gửi tin nhắn kiểm tra về Telegram của bạn!"
+            : "Tạo API Key thành công!";
+          renderCode();
+        } catch {
+          alertEl.className = "alert error";
+          alertEl.textContent = "Lỗi kết nối mạng tới máy chủ.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Tạo API Key miễn phí";
+        }
+      });
+
+      document.getElementById("test-order-btn").addEventListener("click", async () => {
+        const statusEl = document.getElementById("test-order-status");
+        statusEl.textContent = "Đang gửi đơn hàng mẫu...";
+        try {
+          const res = await fetch("/api/notify", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": currentApiKey,
+            },
+            body: JSON.stringify({
+              type: "order",
+              mode: "preview",
+              orderId: "DEMO-" + Date.now().toString().slice(-4),
+              itemTitle: "Đơn hàng kiểm thử",
+              amountVnd: 290000,
+              customerName: "Khách thử nghiệm",
+              contactChannel: "zalo",
+              customerContact: "0900000000",
+              note: "Test từ trang chủ TP91 Telegram Notifier",
+            }),
+          });
+          const data = await res.json();
+          if (res.ok && data.ok) {
+            statusEl.style.color = "#047857";
+            statusEl.textContent = "Đã bắn đơn mẫu về Telegram của bạn thành công!";
+          } else {
+            statusEl.style.color = "#b91c1c";
+            statusEl.textContent = data.error || "Gửi thử thất bại.";
+          }
+        } catch {
+          statusEl.style.color = "#b91c1c";
+          statusEl.textContent = "Lỗi mạng khi gửi thử.";
+        }
+      });
+
+      renderCode();
+    </script>
   </body>
 </html>

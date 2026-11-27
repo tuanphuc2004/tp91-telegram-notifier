@@ -6,10 +6,13 @@ Tài liệu này hướng dẫn từng bước cách bật tính năng **tự đ
 
 ## 1. Tính năng này hoạt động như thế nào?
 
+Có **2 cách sử dụng**:
+- **Cách nhanh nhất (Dùng ngay server có sẵn):** Truy cập trang web dịch vụ (ví dụ `https://tp91-telegram-notifier.vercel.app/`), nhập **Bot Token** + **Chat ID** của bạn để nhận 1 **API Key riêng (`tp91_live_...`)**, rồi copy đoạn code mẫu dán vào website của bạn là chạy ngay — không cần tự deploy server hay tạo database.
+- **Cách tự chủ hoàn toàn:** Tự deploy mã nguồn này lên tài khoản Vercel 0đ của riêng bạn.
+
 Ngay khi khách hàng bấm nút **Đặt mua** hoặc **Gửi yêu cầu** trên website:
-1. Hệ thống lưu đơn hàng vào cơ sở dữ liệu như bình thường.
+1. Hệ thống của bạn gọi API báo tin.
 2. Trong vòng 1–2 giây, Bot Telegram của riêng bạn sẽ gửi ngay 1 tin nhắn chi tiết về điện thoại gồm: **Mã đơn, Tên sản phẩm/gói dịch vụ, Giá tiền, Tên khách, Số Zalo/Telegram/Email và Ghi chú**.
-3. Bạn không cần mở trang Admin kiểm tra liên tục mà vẫn phản hồi khách ngay lập tức.
 
 ---
 

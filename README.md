@@ -26,15 +26,22 @@ TELEGRAM_BOT_TOKEN=123456789:ABCdefGHIjklMNOpqrsTUVwxyz
 TELEGRAM_CHAT_ID=123456789
 ```
 
+## Chế độ Multi-tenant SaaS 0đ (Người dùng tự tạo API Key)
+
+Server hỗ trợ **nhiều người dùng dùng chung 1 URL API duy nhất** mà không cần Database:
+
+1. Người dùng truy cập trang chủ (ví dụ `https://tp91-telegram-notifier.vercel.app/`).
+2. Nhập `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` của họ (tùy chọn `brandName`, `allowedOrigin`) → server dùng **AES-256-GCM** (`KEY_ENCRYPTION_SECRET`) mã hóa thành một API Key dạng `tp91_live_...` thông qua `POST /api/keys`.
+3. Người dùng gắn key `tp91_live_...` vào dự án của họ và gọi `POST /api/notify` — server tự giải mã trên RAM và gửi tin nhắn về **đúng Bot & Chat ID của người đó**.
+
 ## Sử dụng làm API Webhook riêng trên Vercel (0đ)
 
-Repo đã tích hợp sẵn **Vercel Functions** chuẩn Web Standard (`api/health.ts` & `api/notify.ts`) để bạn deploy thành một API dịch vụ dùng chung cho nhiều website khác nhau:
+Repo đã tích hợp sẵn **Vercel Functions** chuẩn Web Standard (`api/health.ts`, `api/keys.ts` & `api/notify.ts`) để bạn deploy thành một API dịch vụ dùng chung:
 
 1. Deploy repo lên **Vercel Hobby (0đ)**.
-2. Trong **Settings → Environment Variables**, thêm 3 biến:
-   - `TELEGRAM_BOT_TOKEN`
-   - `TELEGRAM_CHAT_ID`
-   - `NOTIFY_API_KEY` *(chuỗi bí mật tự đặt để chống spam API)*
+2. Trong **Settings → Environment Variables**, thêm:
+   - `KEY_ENCRYPTION_SECRET`: chuỗi bí mật ngẫu nhiên (32+ ký tự) để mã hóa API Key cho người dùng (`tp91_live_...`).
+   - *(Tùy chọn cho key admin cố định)*: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NOTIFY_API_KEY`.
 3. Gọi từ backend hoặc Next.js Server Action của bất kỳ website nào:
 
 ```bash

@@ -20,18 +20,22 @@ Zero-dependency TypeScript module for sending formatted HTML notifications to a 
   - `formatOrderTelegramMessage(input)` / `formatProjectRequestTelegramMessage(input)` / `formatCustomTelegramMessage(input)`
   - `sendTelegramNotification(htmlText, options?)` — `POST` request with `4.5s` default timeout and non-throwing error return
   - `notifyTelegramNewOrder(input, options?)` / `notifyTelegramProjectRequest(input, options?)`
-- `api/notify.ts` & `api/health.ts` — Standalone Vercel Functions (`GET /api/health`, `POST /api/notify`) protected by `NOTIFY_API_KEY` (`x-api-key` or `Authorization: Bearer`) using `timingSafeEqual`.
+- `src/crypto-key.ts` — Stateless AES-256-GCM API Key issuer & verifier (`tp91_live_...`) encoding `{ botToken, chatId, brandName, allowedOrigin }` without database storage.
+- `api/keys.ts` — `POST /api/keys` endpoint to validate Telegram credentials, optionally send a verification message, and issue an encrypted `tp91_live_...` key.
+- `api/notify.ts` & `api/health.ts` — Standalone Vercel Functions (`GET /api/health`, `POST /api/notify`, `OPTIONS /api/notify`) supporting both multi-tenant `tp91_live_...` keys (with optional `allowedOrigin` CORS lock) and owner `NOTIFY_API_KEY` (`x-api-key` or `Authorization: Bearer`) via `timingSafeEqual`.
+- `public/index.html` — Self-service portal for users to generate API keys and copy Next.js / PHP / cURL / HTML snippets.
 - `examples/nextjs-server-action.ts` — Ready-to-copy Next.js Server Action example.
 - `scripts/test-send.ts` — Manual CLI smoke test (`npm run test:send`).
-- `tests/telegram.test.ts` & `tests/api.test.ts` — Vitest unit tests with mocked `fetch`.
+- `tests/telegram.test.ts`, `tests/crypto-key.test.ts` & `tests/api.test.ts` — Vitest unit tests.
 
 ## Required Environment Variables
 
 Server-only (never expose with `NEXT_PUBLIC_`):
 
-- `TELEGRAM_BOT_TOKEN`
-- `TELEGRAM_CHAT_ID`
-- `NOTIFY_API_KEY` (required for `/api/notify` endpoint; endpoint fails closed with `503` if unset)
+- `KEY_ENCRYPTION_SECRET` (32+ char secret for issuing/decrypting `tp91_live_...` keys; falls back to `NOTIFY_API_KEY` if unset)
+- `TELEGRAM_BOT_TOKEN` (optional if only operating in multi-tenant `tp91_live_...` mode)
+- `TELEGRAM_CHAT_ID` (optional if only operating in multi-tenant `tp91_live_...` mode)
+- `NOTIFY_API_KEY` (optional owner master key for `/api/notify`)
 - `TELEGRAM_BRAND_NAME` (optional header label, defaults to `TP91tool`)
 
 ## Implementation Rules
