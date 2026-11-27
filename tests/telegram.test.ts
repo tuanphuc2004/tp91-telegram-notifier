@@ -5,7 +5,7 @@ import {
   formatProjectRequestTelegramMessage,
   isTelegramConfigured,
   sendTelegramNotification,
-} from "../src/index";
+} from "../src/index.js";
 
 describe("tp91-telegram-notifier", () => {
   const originalToken = process.env.TELEGRAM_BOT_TOKEN;

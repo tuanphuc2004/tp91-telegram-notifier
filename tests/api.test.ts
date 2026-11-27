@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { GET as healthGet } from "../api/health";
-import { POST as notifyPost } from "../api/notify";
+import { GET as healthGet } from "../api/health.js";
+import { POST as notifyPost } from "../api/notify.js";
 
 describe("Vercel API endpoints (/api/health & /api/notify)", () => {
   const originalToken = process.env.TELEGRAM_BOT_TOKEN;

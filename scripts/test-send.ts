@@ -1,4 +1,4 @@
-import { formatOrderTelegramMessage, isTelegramConfigured, sendTelegramNotification } from "../src/index";
+import { formatOrderTelegramMessage, isTelegramConfigured, sendTelegramNotification } from "../src/index.js";
 
 async function main() {
   if (!isTelegramConfigured()) {

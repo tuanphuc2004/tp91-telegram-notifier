@@ -3,3 +3,7 @@ coverage
 .env*
 !.env.example
 *.tsbuildinfo
+.vercel
+
+.vercel
+.env*

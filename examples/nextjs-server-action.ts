@@ -1,6 +1,6 @@
 "use server";
 
-import { notifyTelegramNewOrder } from "../src/index";
+import { notifyTelegramNewOrder } from "../src/index.js";
 
 /**
  * Example Next.js Server Action integration.
