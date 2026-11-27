@@ -10,6 +10,11 @@ Module TypeScript **0 dependency runtime** giúp website (Next.js Server Actions
   - `formatOrderTelegramMessage` / `notifyTelegramNewOrder`
   - `formatProjectRequestTelegramMessage` / `notifyTelegramProjectRequest`
 
+## Tài liệu đi kèm
+
+- **Hướng dẫn sử dụng chi tiết cho người dùng / bàn giao khách:** [`HUONG_DAN_SU_DUNG.md`](./HUONG_DAN_SU_DUNG.md)
+- **Skill chuẩn Antigravity / Claude Code:** [`SKILL.md`](./SKILL.md)
+
 ## Cách lấy Bot Token & Chat ID (2 phút)
 
 1. Mở Telegram, nhắn cho **@BotFather** → gửi `/newbot` → đặt tên bot và nhận `TELEGRAM_BOT_TOKEN`.
