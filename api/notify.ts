@@ -3,6 +3,7 @@ import {
   API_KEY_PREFIX,
   decryptEncryptedApiKey,
   isMultiTenantKeysEnabled,
+  parseAllowedOrigins,
 } from "../src/crypto-key.js";
 import {
   formatCustomTelegramMessage,
@@ -49,6 +50,14 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function getRequestSelfOrigin(requestUrl: string): string | null {
+  try {
+    return new URL(requestUrl).origin;
+  } catch {
+    return null;
+  }
+}
+
 export async function OPTIONS(request: Request): Promise<Response> {
   const origin = request.headers.get("origin");
   return new Response(null, {
@@ -90,16 +99,33 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const reqOrigin = request.headers.get("origin")?.trim();
-    if (decrypted.payload.allowedOrigin) {
-      if (reqOrigin && reqOrigin !== decrypted.payload.allowedOrigin) {
-        return jsonResponse(
-          { ok: false, error: "Origin không khớp với domain đã đăng ký trong API key." },
-          403
-        );
+    const allowedOrigins = parseAllowedOrigins(decrypted.payload.allowedOrigin);
+    const selfOrigin = getRequestSelfOrigin(request.url);
+
+    if (allowedOrigins.length > 0) {
+      if (reqOrigin) {
+        const isAllowed =
+          allowedOrigins.includes(reqOrigin) ||
+          (selfOrigin !== null && reqOrigin === selfOrigin);
+        if (!isAllowed) {
+          return jsonResponse(
+            {
+              ok: false,
+              error: `Origin (${reqOrigin}) không khớp với domain đã đăng ký (${allowedOrigins.join(", ")}). Nếu dùng Next.js/Backend hoặc nhiều domain, hãy tạo lại API Key và để trống ô Khóa theo Domain.`,
+            },
+            403
+          );
+        }
+        corsHeaders = {
+          "Access-Control-Allow-Origin": reqOrigin,
+          Vary: "Origin",
+        };
+      } else {
+        corsHeaders = {
+          "Access-Control-Allow-Origin": allowedOrigins[0],
+          Vary: "Origin",
+        };
       }
-      corsHeaders = {
-        "Access-Control-Allow-Origin": decrypted.payload.allowedOrigin,
-      };
     }
 
     targetBotToken = decrypted.payload.botToken;

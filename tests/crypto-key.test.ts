@@ -28,11 +28,11 @@ describe("crypto-key (AES-256-GCM stateless API keys)", () => {
       botToken: "8728454048:AAGbymwh_ivKwkjvJlJS72YbXp7BBCXTZ08",
       chatId: "-1001234567890",
       brandName: "Shop Minh Anh",
-      allowedOrigin: "https://shop.vn/checkout",
+      allowedOrigin: "https://shop.vn/checkout, http://localhost:3000/test",
     });
     expect(valid.ok).toBe(true);
     if (valid.ok) {
-      expect(valid.data.allowedOrigin).toBe("https://shop.vn");
+      expect(valid.data.allowedOrigin).toBe("https://shop.vn, http://localhost:3000");
     }
   });
 

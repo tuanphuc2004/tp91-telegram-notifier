@@ -119,16 +119,16 @@ describe("Vercel API endpoints (/api/health, /api/keys, /api/notify)", () => {
     expect(sentBody.text).toContain("ORD-888");
   });
 
-  it("POST /api/notify enforces allowedOrigin when key is domain-locked", async () => {
+  it("POST /api/notify enforces allowedOrigin for third-party origins but allows portal self-origin", async () => {
     process.env.KEY_ENCRYPTION_SECRET = "server-aes-secret-key-1234";
     const issued = issueEncryptedApiKey({
       botToken: "999999999:UserSpecificBotTokenValue123456",
       chatId: "555666777",
-      allowedOrigin: "https://myshop.vn",
+      allowedOrigin: "https://myshop.vn, http://localhost:3000",
     });
     if (!issued.ok) throw new Error("Issue failed");
 
-    const req = new Request("https://example.com/api/notify", {
+    const blockedReq = new Request("https://notifier.vercel.app/api/notify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -138,8 +138,24 @@ describe("Vercel API endpoints (/api/health, /api/keys, /api/notify)", () => {
       body: JSON.stringify({ title: "Hi", message: "Test" }),
     });
 
-    const res = await notifyPost(req);
-    expect(res.status).toBe(403);
+    const blockedRes = await notifyPost(blockedReq);
+    expect(blockedRes.status).toBe(403);
+
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200 });
+    globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+    const selfReq = new Request("https://notifier.vercel.app/api/notify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://notifier.vercel.app",
+        "x-api-key": issued.apiKey,
+      },
+      body: JSON.stringify({ title: "Hi", message: "Self portal test" }),
+    });
+
+    const selfRes = await notifyPost(selfReq);
+    expect(selfRes.status).toBe(200);
   });
 
   it("POST /api/notify still supports master NOTIFY_API_KEY", async () => {

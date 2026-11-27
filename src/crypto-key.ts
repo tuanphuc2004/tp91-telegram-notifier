@@ -41,6 +41,14 @@ function deriveAesKey(secret: string): Buffer {
   return createHash("sha256").update(secret, "utf8").digest();
 }
 
+export function parseAllowedOrigins(raw?: string): string[] {
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 export function validateIssueKeyInput(
   raw: IssueKeyInput
 ):
@@ -76,21 +84,36 @@ export function validateIssueKeyInput(
 
   let allowedOrigin: string | undefined;
   if (rawOrigin) {
-    try {
-      const parsed = new URL(rawOrigin);
-      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-        return {
-          ok: false,
-          error: "Allowed Origin chỉ chấp nhận http:// hoặc https://.",
-        };
-      }
-      allowedOrigin = parsed.origin;
-    } catch {
+    const parts = parseAllowedOrigins(rawOrigin);
+    if (parts.length > 5) {
       return {
         ok: false,
-        error: "Allowed Origin không phải URL hợp lệ (ví dụ: https://shop.vn).",
+        error: "Tối đa 5 domain trong mục Khóa theo Domain.",
       };
     }
+
+    const normalized: string[] = [];
+    for (const part of parts) {
+      try {
+        const parsed = new URL(part);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          return {
+            ok: false,
+            error: "Khóa theo Domain chỉ chấp nhận http:// hoặc https://.",
+          };
+        }
+        if (!normalized.includes(parsed.origin)) {
+          normalized.push(parsed.origin);
+        }
+      } catch {
+        return {
+          ok: false,
+          error:
+            "Domain không hợp lệ (ví dụ: https://shop.vn hoặc https://shop.vn, http://localhost:3000).",
+        };
+      }
+    }
+    allowedOrigin = normalized.join(", ");
   }
 
   return {

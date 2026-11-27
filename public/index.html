@@ -350,13 +350,13 @@
             </div>
 
             <div class="field">
-              <label for="allowedOrigin">Khóa theo Domain (tùy chọn — chỉ điền nếu gọi từ HTML tĩnh)</label>
+              <label for="allowedOrigin">Khóa theo Domain (tùy chọn — bỏ trống nếu dùng Next.js / Backend)</label>
               <input
                 id="allowedOrigin"
-                type="url"
-                placeholder="https://shopcuaban.com"
+                type="text"
+                placeholder="Bỏ trống nếu gọi từ Server; hoặc nhập https://shop.vn, http://localhost:3000"
               />
-              <span class="hint">Để trống nếu bạn gọi từ Backend (Next.js, Node.js, PHP, n8n).</span>
+              <span class="hint">Chỉ nên điền khi gọi trực tiếp từ file HTML tĩnh trên trình duyệt. Có thể nhập nhiều domain cách nhau bởi dấu phẩy.</span>
             </div>
 
             <label class="checkbox-row">
